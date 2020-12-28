@@ -1,0 +1,80 @@
+#########################################################################
+#To Check YAML file
+
+https://jsonformatter.org/yaml-validator
+
+##########################################################################
+#Generate SSH key first
+
+ssh-keygen
+
+##########################################################################
+#Log into remote machines
+
+nano /etc/ssh/sshd_config
+change password authentication to "yes"
+generate password from machines > "passwd" "machine_name" >"Type_Password"
+
+##########################################################################
+#To copy id_rsa.pub  on remote server use command;
+
+ssh-coy-id ec2-user@IP address of remote server
+ssh-copy-id ubuntu@54.173.210.230
+ssh-copy-id ubuntu@35.153.255.176
+
+
+###########################################################################
+
+#sshd service needs to reload after copying rsa key from control server to remote servers
+service sshd reload (Linux)
+systemctl reload ssh (ubuntu)
+
+###########################################################################
+#hosts need be added here
+
+nano /etc/hosts
+
+###########################################################################
+#Playbook to Install Apache
+
+---
+- hosts: [AWS-Ubuntu]
+  become: yes
+  gather_facts: yes
+  
+  tasks:
+   - name: Install Apache Webserver
+     apt: pkg=apache2 state=present update_cache=true
+   - name: start Apache server
+     apt: pkg=apache2 state=started     
+
+
+##############################################################################
+#Playbook to Remove Apache
+
+---
+- hosts: [AWS-Ubuntu]
+  become: yes
+  gather_facts: yes
+
+  tasks:        
+  - name: Get the install apache version
+    command: 'apache2 -v'
+  - name: Remove Apache server from Ubuntu server.
+    apt: pkg=apache2 state=absent update_cache=yes
+  - name: Remove unwanted Apache2 packages from the system.
+	apt: autoremove=yes purge=yes
+  - name: remove apache2 from /etc
+    command: 'rm -rf /etc/apache2'
+	
+	
+############################################################################
+#To Remove Apache Manually
+
+$ sudo service apache2 stop
+$ sudo apt-get purge apache2 apache2-utils apache2.2-bin apache2-common
+$ sudo apt-get autoremove
+$ whereis apache2
+apache2: /etc/apache2
+$ sudo rm -rf /etc/apache2
+
