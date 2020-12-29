@@ -78,3 +78,8 @@ $ whereis apache2
 apache2: /etc/apache2
 $ sudo rm -rf /etc/apache2
 
+############################################################################
+#List of URLs for help
+
+http://manpages.ubuntu.com/manpages/groovy/man1/ansible-playbook.1.html
+https://www.tutorialspoint.com/ansible/ansible_playbooks.htm
